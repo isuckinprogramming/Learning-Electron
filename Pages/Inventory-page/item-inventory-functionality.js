@@ -2,8 +2,8 @@
 const buttonToEnterMainPage = document.getElementById("returnToMainPageButton");
 
 buttonToEnterMainPage.onclick = () => { 
-    window.functions.SiteNav.entryToMainPage();
+    window.SiteNavigation.entryToMainPage();
 }
 
-window.functions.dataReceive.requestAndWaitForInventory();
+window.receiveInventoryData.requestAndWaitForInventory();
 

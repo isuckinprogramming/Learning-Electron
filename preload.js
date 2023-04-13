@@ -9,7 +9,8 @@ contextBridge.exposeInMainWorld( "itemRegistry", {
   }
 )
 contextBridge.exposeInMainWorld("receiveInventoryData", {
-      requestAndWaitForInventory: async () => { 
+     
+    requestAndWaitForInventory: async () => { 
 
       let itemInventory = await ipcRenderer.invoke("needItemInventory", null);
       console.log(itemInventory);
@@ -23,7 +24,7 @@ contextBridge.exposeInMainWorld( "SiteNavigation", {
     },
     entryToRegistry: () => { 
       console.log("user wants to enter the register page.")
-      ipcRenderer.send( "UserWantsToEnterRegisterPageEvent", complexObject );
+      ipcRenderer.send( "UserWantsToEnterRegisterPageEvent", "something to be passed" );
     },
     entryToInventory: () => {
 

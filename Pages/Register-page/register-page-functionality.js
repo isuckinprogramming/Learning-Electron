@@ -9,17 +9,15 @@ const registerQuantityOfItemTaker = document.getElementById("ItemQuantityReceive
 const registerPriceOfItemTaker = document.getElementById("ItemPriceReceiver");
 
 
-buttonToEnterMainPage.onclick = () => { functions.SiteNav.entryToMainPage() }
+buttonToEnterMainPage.onclick = () => { SiteNavigation.entryToMainPage() }
 
 buttonToRegisterItemDetails.onclick = () => {
 
-    // let itemDetails = `${EnterNameOfItem()} | ${EnterPriceOfItem()} | ${EnterQuantityOfItem()} | `;
-    // functions.ItemManagementFunctions.sendItemsToInventory(itemDetails); 
-
-    functions.dataSend.sendRegisteredItem( {
-        nameOfItem: EnterNameOfItem(), priceOfItem: EnterPriceOfItem(), quantityOfItem: EnterQuantityOfItem()
+    itemRegistry.sendItemsToInventory( {
+        nameOfItem: EnterNameOfItem(),
+        priceOfItem: EnterPriceOfItem(),
+        quantityOfItem: EnterQuantityOfItem()
     } );
-
 }
 
 function EnterNameOfItem() { 

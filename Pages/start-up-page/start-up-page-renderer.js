@@ -18,18 +18,18 @@ buttonToTriggerTakingText.onclick = () => {
     ipcRenderer.send( "MessageEvent", textInside );
 }
 
-buttonToEnterRegisterPage.onclick = functions.SiteNav.entryToRegistry;
+buttonToEnterRegisterPage.onclick = SiteNavigation.entryToRegistry;
 
-buttonToEnterInventoryPage.onclick = functions.SiteNav.entryToInventory;
+buttonToEnterInventoryPage.onclick = SiteNavigation.entryToInventory;
 
-buttonToEnterPurchasePage.onclick = functions.SiteNav.entryToPurchase;
+buttonToEnterPurchasePage.onclick = SiteNavigation.entryToPurchase;
 
-buttonToEnterTransactionsPage.onclick = functions.SiteNav.entryToTransactionsHistory;
+buttonToEnterTransactionsPage.onclick = SiteNavigation.entryToTransactionsHistory;
 
-window.functions.test(
-    (event, varToReceive ) => { 
-        console.log(            
-        `Variable was received from main process.
-        \nCounter variable: ${varToReceive.counterVariable}
-        \ntest variable: ${varToReceive.testVariableTwo}`)
-} )
+// window.functions.test(
+//     (event, varToReceive ) => { 
+//         console.log(            
+//         `Variable was received from main process.
+//         \nCounter variable: ${varToReceive.counterVariable}
+//         \ntest variable: ${varToReceive.testVariableTwo}`)
+// } )
