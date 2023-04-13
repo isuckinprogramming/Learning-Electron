@@ -20,6 +20,13 @@ buttonToRegisterItemDetails.onclick = () => {
     } );
 }
 
+/**
+ * Have not applied any filter yet, the user 
+ * is capable of passing inputs that are invalid.
+ * 
+ * I want to create a filter here to stop
+ * the user from entering invalid input.
+*/
 function EnterNameOfItem() { 
 
     let name = registerNameOfItemTaker.value;    
@@ -27,6 +34,18 @@ function EnterNameOfItem() {
     return name;
 }
 
+/**
+ *This function retrieves the input of the user for the  
+ * price of the Item, I have not implemented any 
+ * filter for this function. 
+ * 
+ * User can possibly provide values ranging from 0 to negative infinity,
+ * or the user could enter values other than number.
+ * 
+ * The filter for this function can be shared with the filter for retrieving
+ * the quantity the user wants to register. 
+ * 
+*/
 function EnterPriceOfItem() { 
 
     let price = registerPriceOfItemTaker.value;
@@ -34,6 +53,13 @@ function EnterPriceOfItem() {
     return price;
 }
 
+
+/**
+ * Still have not created a filter for this function,
+ * I have not yet filter out invalid input from the 
+ * user. 
+ * 
+*/
 function EnterQuantityOfItem() { 
 
     let numberOfItem = registerQuantityOfItemTaker.value;

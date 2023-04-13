@@ -4,10 +4,10 @@ const { app,BrowserWindow, ipcMain } = require('electron');
 const url = require('url');
 const path = require('path');
 
-
 let startUpWindow;    
 let inventoryOfItem = [];
 
+//I don't know what to do if the promise fails.
 app.whenReady().then( createStartUpWindow );
 
 ipcMain.on( 
