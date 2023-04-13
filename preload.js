@@ -4,7 +4,7 @@ contextBridge.exposeInMainWorld( "itemRegistry", {
 
     sendItemsToInventory: ( itemDetails ) => {
             
-      ipcRenderer.send("newRegisteredItem", itemDetails);
+      ipcRenderer.send("newItemToBeRegistered", itemDetails);
     }
   }
 )
@@ -31,6 +31,8 @@ contextBridge.exposeInMainWorld("receiveInventoryData", {
       //I don't understand how the debugger or debuggers work in electron
       //so I'm sticking with console.log() in order to keep track of values and changes  
       console.log(itemInventory);
+      
+    return itemInventory;
     }
   }
 )

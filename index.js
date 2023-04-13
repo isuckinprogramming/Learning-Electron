@@ -44,7 +44,7 @@ ipcMain.on(
          * 
         */
         startUpWindow.loadFile( path.join( __dirname + "/Pages/Register-page/register-item-page.html") )
-        console.log("user has entered the register page")
+        // console.log("user has entered the register page")
     }
 
 );

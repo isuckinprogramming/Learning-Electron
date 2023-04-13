@@ -14,11 +14,12 @@ buttonToEnterMainPage.onclick = () => { SiteNavigation.entryToMainPage() }
 buttonToRegisterItemDetails.onclick = () => {
 
     itemRegistry.sendItemsToInventory( {
-        nameOfItem: EnterNameOfItem(),
-        priceOfItem: EnterPriceOfItem(),
-        quantityOfItem: EnterQuantityOfItem()
+        name: EnterNameOfItem(),
+        price: EnterPriceOfItem(),
+        quantity: EnterQuantityOfItem()
     } );
 }
+
 
 /**
  * Have not applied any filter yet, the user 
@@ -33,6 +34,7 @@ function EnterNameOfItem() {
     registerNameOfItemTaker.value = "";
     return name;
 }
+
 
 /**
  *This function retrieves the input of the user for the  
