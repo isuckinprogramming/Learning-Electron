@@ -1,24 +1,37 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <script defer type = "module" src="purchase-page-functionality.js"> </script>
-    <title>Purchase Page</title>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <script defer type = "module" src="purchase-page-functionality.js"> </script>
+  <link rel="stylesheet" href="purchase-page-stylesheet.css">
+  
+  <title>Purchase Page</title>
 </head>
 <body>
-    <h1> PURCHASE PAGE </h1>
-    
-    <div id = "contentNavigationButtons">
+  <h1> PURCHASE PAGE </h1>
 
-        <button id = "returnToMainPageButton">
-            Return to Main Page
-        </button> <br>
-    </div>
+  <div id = "contentNavigationButtons">
+    <button id = "returnToMainPageButton">
+      Return to Main Page
+    </button> <br>
+  </div>
 
-    <p id = "displayer"> No content yet </p>
+  <p id = "displayer"> No content yet </p>
 
+  <div id = "itemPurchaseForm">
+    <label for="NameOfItemToPurchase">Name Of Item To Purchase</label> 
+    <input type="text" id = "nameOfItemToPurchaseReceiver" name = "NameOfItemToPurchase"> <br>
+
+    <label for="AmountToPurchase">Amount To Purchase</label> 
+    <input type="text" id = "amountToPurchaseReceiver" name = "AmountToPurchase"> <br>
+
+    <label for="AmountToPayForPurchases">Money For Purchase</label> 
+    <input type="text" id = "purchaseMoneyReceiver" name = "AmountToPayForPurchases"> <br>
+
+    <button id = "registerDetailsForItem">Purchase</button>
+  </div>
 </body>
 </html>
