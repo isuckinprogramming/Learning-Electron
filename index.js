@@ -10,8 +10,7 @@ let inventoryOfItem = [];
 //I don't know what to do if the promise fails.
 app.whenReady().then( createStartUpWindow );
 
-ipcMain.on( 
-    "MessageEvent",
+ipcMain.on( "MessageEvent",
     function ( event, dataFromEvent ) { 
         
         console.log(
@@ -26,16 +25,14 @@ ipcMain.on(
     }
 );
 
-ipcMain.on(
-    "userWantsToEnterInventoryPage",
+ipcMain.on( "userWantsToEnterInventoryPage",
     (event, dataFromEvent) => {
         // ipcMain.emit()
         startUpWindow.loadFile ( path.join( __dirname + "/Pages/Inventory-page/item-inventory.html" ) )
     }
 )
 
-ipcMain.on(
-    "UserWantsToEnterRegisterPageEvent",
+ipcMain.on( "UserWantsToEnterRegisterPageEvent",
     function (event, dataFromEvent) { 
         
         /**
@@ -49,8 +46,7 @@ ipcMain.on(
 
 );
 
-ipcMain.on(
-    "EnterMainPageEvent",
+ipcMain.on( "EnterMainPageEvent",
     function (event, dataFromEvent) {
         
         console.log(dataFromEvent);
@@ -58,9 +54,14 @@ ipcMain.on(
     }
 );
 
+ipcMain.on( "userWantsToEnterPurchasePage",
+    ( event, eventData ) => { 
 
-ipcMain.on(
-    "newRegisteredItem", 
+        startUpWindow.loadFile( path.join( __dirname, "/Pages/Purchase-page/purchase-page.html" ) )
+    }
+)
+
+ipcMain.on( "newRegisteredItem", 
     ( event, eventData ) => {
         
         console.log( "successful entry of data: " + eventData);
@@ -73,8 +74,7 @@ ipcMain.on(
 
 let itemStorage = [];
 
-ipcMain.on(
-    "newItemToBeRegistered",
+ipcMain.on( "newItemToBeRegistered",
     (event, eventData) => {
         //test if variable arrived safely.
         console.log(eventData);
@@ -85,8 +85,7 @@ ipcMain.on(
     }
 );
 
-ipcMain.handle(
-    "needItemInventory",
+ipcMain.handle( "needItemInventory",
     (event, eventData) => { 
         return itemStorage;
     }

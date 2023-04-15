@@ -26,11 +26,10 @@ contextBridge.exposeInMainWorld("receiveInventoryData", {
 
       let itemInventory = await ipcRenderer.invoke("needItemInventory", null);
       
-    
       //need the log in order to see the results immediately,
       //I don't understand how the debugger or debuggers work in electron
       //so I'm sticking with console.log() in order to keep track of values and changes  
-      console.log(itemInventory);
+      console.log( `Inventory data: ${ itemInventory }`);
       
     return itemInventory;
     }
