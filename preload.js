@@ -79,5 +79,13 @@ contextBridge.exposeInMainWorld( "SiteNavigation", {
   }
 ) 
 
+contextBridge.exposeInMainWorld( "PurchaseItem" , { 
+  checkIfItemNameExist: async ( nameOfItemToCheck ) => { 
+      let resultOfCheck = await ipcRenderer.invoke("ifItemNameExistInsideInventory", nameOfItemToCheck)
 
+      return resultOfCheck;    
+    }
+
+  }
+)
 

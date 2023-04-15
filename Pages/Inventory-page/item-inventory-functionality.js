@@ -12,7 +12,7 @@ async function fetchInventoryAndDisplayContents() {
   //inventoryData is an array of item, and an item contains fields such as name, price, quantity. 
   let inventoryData = await window.receiveInventoryData.requestAndWaitForInventory();
 
-  if (inventoryData.length == 0) { 
+  if (inventoryData.size === 0) { 
     console.log("No items to display")
     return;
   }

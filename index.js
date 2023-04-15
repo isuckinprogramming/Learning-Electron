@@ -72,14 +72,15 @@ ipcMain.on( "newRegisteredItem",
 );
 
 
-let itemStorage = [];
+let itemStorage = new Map;
 
 ipcMain.on( "newItemToBeRegistered",
     (event, eventData) => {
         //test if variable arrived safely.
         console.log(eventData);
         
-        itemStorage.push(eventData);
+        // itemStorage.push(eventData);
+        itemStorage.set(eventData.name, eventData);
 
         console.log(itemStorage);
     }
@@ -91,6 +92,24 @@ ipcMain.handle( "needItemInventory",
     }
 );
 
+ipcMain.handle("ifItemNameExistInsideInventory", 
+    ( event, eventData ) => { 
+        
+        if (itemStorage.has(eventData)) {
+
+            console.log("item found")
+            return true;
+        }
+
+        // for (let loopCounter = 0; loopCounter < itemStorage.length; loopCounter++ ) { 
+            
+        //     if ( itemStorage[ loopCounter ].name === eventData ) 
+        //     console.log( `item found: ${ eventData } exist inside inventory, index ` )
+        // } 
+
+        return false;
+    }
+) 
 
 function createStartUpWindow() {
     
@@ -117,20 +136,34 @@ function createStartUpWindow() {
     startUpWindow.webContents.send("test", {name: "testItem", price : 123, quantity: 23423})
 
 
-
-    // setInterval(
-    //     testFunction, 2000
-    // );
+    /**
+     *setInterval(
+        testFunction, 2000
+    );
     
-    // function testFunction() {
+    function testFunction() {
         
-    //     counterVariable++;
+        counterVariable++;
 
-    //     startUpWindow.webContents.send(
-    //         "testEvent",
-    //         { counterVariable: counterVariable, testVariableTwo: "a string" }
-    //     );
-    // }
+        startUpWindow.webContents.send(
+            "testEvent",
+            { counterVariable: counterVariable, testVariableTwo: "a string" }
+        );
+    }setInterval(
+        testFunction, 2000
+    );
+    
+    function testFunction() {
+        
+        counterVariable++;
+
+        startUpWindow.webContents.send(
+            "testEvent",
+            { counterVariable: counterVariable, testVariableTwo: "a string" }
+        );
+    } 
+     * 
+    */
 }
 
 
