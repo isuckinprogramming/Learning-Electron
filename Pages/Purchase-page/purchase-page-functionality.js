@@ -54,23 +54,92 @@ async function displayItemsToPurchase() {
 *  
 */
 
-function purchase() {
+async function purchase() {
 
-  takeNameOfItemToPurchase();
+  const resultFromNameCheck = await takeNameOfItemToPurchase();
 
-   async function takeNameOfItemToPurchase() {     
+  if ( ! resultFromNameCheck.doesNameExist ) { 
+    /**
+     *  end of purchase process because the item does not exist, so no need to go over the 
+     *  other parts of the process. 
+    */
+    return;
+  }
+
+  const itemName = resultFromNameCheck.nameOfItemEntered;
+  
+  const resultFromQuantityCheck = await takeQuantityOfItemToPurchase(itemName);
+
+  if ( !resultFromQuantityCheck.isQuantityValid ) { 
+    
+    //end function because quantity entered is invalid
+    return;
+  }
+
+  const resultFromMoneyTransaction = await takeMoneyForPuchase(
+    resultFromQuantityCheck.pricePerPiece,
+    resultFromQuantityCheck.quantityToPurchase  
+  )
+
+
+
+
+  async function isInputNotEmpty( input ) {   
+    
+    if (
+      input === "" ||
+      input.trim() === "" ||
+      input === undefined ) {
+      
+      return false;
+    }
+    return true;
+  }
+
+  async function takeNameOfItemToPurchase() {     
+    
     const nameTaker = document.getElementById("nameOfItemToPurchaseReceiver");
-    let nameOfItem = nameTaker.value;  
+    const nameOfItem = nameTaker.value;  
+    
+    const isValueValid = await isInputNotEmpty(nameOfItem);
+
+    if ( !isValueValid ) { 
+      //end function, no need for verification
+      console.log("user entered a value that cannot be identified to any item name inside inventory")
+      return { doesNameExist: false, nameOfItemEntered: nameOfItem };
+    }
 
     let result = await window.PurchaseItem.checkIfItemNameExist( nameOfItem )
     console.log(`feedback from main process received, ${result} `)
+    return { doesNameExist: true, nameOfItemEntered: nameOfItem };
   }
 
-  function takeQuantityOfItemToPurchase() {
+  async function takeQuantityOfItemToPurchase( nameOfItem ) {
+    
+    const quantityTaker = document.getElementById("amountToPurchaseReceiver");
+    const quantity = quantityTaker.value;
+
+    if ( ! ( await isInputNotEmpty( quantity ) ) ) { 
+      //invalid input
+      return;
+    }
       
+
+
   }
 
-  function takeMoneyForPuchase() { 
+  async function takeMoneyForPuchase( pricePerPiece , quantity ) { 
   
+    const moneyTaker = document.getElementById("purchaseMoneyReceiver");
+    const money = moneyTaker.value;
+
+    if (!( await isInputNotEmpty( money ))) { 
+      // invalid input
+      return;
+    }
+
+
+
   }
 }
+
