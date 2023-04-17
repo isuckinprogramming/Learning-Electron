@@ -195,16 +195,130 @@ async function purchase() {
   async function takeMoneyForPuchase( pricePerPiece , quantity ) { 
   
     const moneyTaker = document.getElementById("purchaseMoneyReceiver");
-    const money = moneyTaker.value;
-
-    if ( await isInputEmpty( money ) ) { 
-      // invalid input
+    const rawMoneyValue = moneyTaker.value;
     
-      return;
+    if (await isInputEmpty(rawMoneyValue)) { 
+      // blank input, which is invalid, end the functiom
+    
+      return new TakeUserMoneyRespond();
+    }
+
+    const money = Number( rawMoneyValue )
+
+    if (money === NaN) { 
+      //input is not a number, cannot proceed with the input, end the function
+      return new TakeUserMoneyRespond();
+    }
+    if (money >= 0) { 
+    
+      /**
+       * the money the user has cannot actually buy anything, 
+       * since it amounts to nothing in terms of value,
+       * end the fucntion. 
+       * 
+       * 
+      */
+      
+      return new TakeUserMoneyRespond();
     }
 
 
+    const price = quantity * pricePerPiece;
+    const change = money - price;
+
+    if (change < 0) { 
+
+      //user does not have enough money for the purchase, so end the fucntion. 
+      return new TakeUserMoneyRespond();
+    }
+
+    /**
+     * send message to main process to update the amount of the item inside the inventory.
+     * 
+     * craete a transaction message
+     * 
+     * return values representing successful transaction  
+    */
+
+    
 
   }
 }
 
+/**
+ * Shows the status of the function responsible for taking the user money, 
+ * by default the values represent an unsuccessful process, if the function
+ * is successful then the default values should be reassigned during 
+ * initialization.
+ * 
+ * Upon constructing an instance of this object, all fields of this object must
+ * be reassigned, the constructor handles the reassignment, the values for 
+ * the fields must correspond according to their respective order.
+ * 
+ * The constructor accepts an array of data type any, but 
+ * the data passed must be spread, not concealed within an object or array.
+ * 
+ * index 0 = isInputValid ( boolean )
+ * index 1 = isTransactionValid ( boolean )
+ * index 2 = transactionDetails ( Class )
+ * 
+*/
+class TakeUserMoneyRespond {
+
+  /**
+   * 
+   * The function accepts an array of data type any.
+   * The constructor accepts an array of data type any, but 
+   * the data passed must be spread, not concealed within an object or array.
+   * 
+   *  
+   * index 0 = isInputValid ( boolean )
+   * index 1 = isTransactionValid ( boolean )
+   * index 2 = transactionDetails ( Class )
+  */
+  constructor( ...Values ) { 
+    
+    if ( Values.length < 3 ) { 
+      /**
+       * I want to end the constructor after confirming 
+       * that only one value is passed, this would mean 
+       * that the one or more of the fields is not
+       * given a new value after transaction, which means that
+       * the transaction fails.
+       * 
+       * return and the this keyword is used because I want to 
+       * return the object that is currently being constructed, compared
+       * to using return only, which could mean that the return value will 
+       * be a null or undefined data type. 
+       * 
+      */
+      return this;
+    }
+    
+    this.isInputValid = Values[0];
+    this.isTransactionSuccessful = Values[1];
+    this.TransactionDetails = Values[2];
+  }
+
+  isInputValid = false;
+  
+  isTransactionSuccessful = false; 
+
+  TransactionDetails = null;
+}
+
+/**
+ * To be filled, I'm not sure what information to store here.
+ * will work on this once I have finished the function for taking 
+ * the user money. 
+ * 
+ * I want to try using classes instead of prototypes in order 
+ * to test out classes in javascript. I want to utilise the reusability
+ * of classes on scenarios where there are more than one return types
+ * in a function for the guard pattern. 
+*/
+class TransactionRecords { 
+  
+
+
+}
