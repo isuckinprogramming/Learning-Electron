@@ -30,9 +30,14 @@ contextBridge.exposeInMainWorld("receiveInventoryData", {
       //I don't understand how the debugger or debuggers work in electron
       //so I'm sticking with console.log() in order to keep track of values and changes  
       console.log( `Inventory data: ${ itemInventory }`);
-      
-    return itemInventory;
+        
+      return itemInventory;
+    },
+    checkIfQuantityToPurchaseIsAvailable: async (itemName, quantity) => { 
+        
+      return await ipcRenderer.invoke("checkForAvailableContent", itemName, quantity);
     }
+
   }
 )
 contextBridge.exposeInMainWorld( "SiteNavigation", {

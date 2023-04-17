@@ -71,8 +71,7 @@ ipcMain.on( "newRegisteredItem",
     }
 );
 
-
-let itemStorage = new Map;
+const itemStorage = new Map;
 
 ipcMain.on( "newItemToBeRegistered",
     (event, eventData) => {
@@ -92,24 +91,37 @@ ipcMain.handle( "needItemInventory",
     }
 );
 
-ipcMain.handle("ifItemNameExistInsideInventory", 
-    ( event, eventData ) => { 
-        
-        if (itemStorage.has(eventData)) {
+ipcMain.handle("ifItemNameExistInsideInventory", ( event, eventData ) => { 
+    
+    if (itemStorage.has(eventData)) {
 
-            console.log("item found")
-            return true;
-        }
-
-        // for (let loopCounter = 0; loopCounter < itemStorage.length; loopCounter++ ) { 
-            
-        //     if ( itemStorage[ loopCounter ].name === eventData ) 
-        //     console.log( `item found: ${ eventData } exist inside inventory, index ` )
-        // } 
-
-        return false;
+      console.log("item found")
+      return true;
     }
+
+      // for (let loopCounter = 0; loopCounter < itemStorage.length; loopCounter++ ) { 
+          
+      //     if ( itemStorage[ loopCounter ].name === eventData ) 
+      //     console.log( `item found: ${ eventData } exist inside inventory, index ` )
+      // } 
+
+      return false;
+  }
 ) 
+ipcMain.handle("checkForAvailableContent", ( event, eventData ) => { 
+    
+    const quantity = eventData[0]
+    const itemToCheck = itemStorage.get( eventData[1] );
+
+    if( quantity > itemToCheck.quantity ) { 
+      //the purchase is invalid because there is not enough quantity to satisfy the demand 
+      return { isItemAvailable: false };
+    }
+    //there is enough available quantity for the demand.
+    return { isItemAvailable: true, pricePerPiece: itemToCheck.price  };
+  }
+)
+
 
 function createStartUpWindow() {
     
