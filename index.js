@@ -25,9 +25,9 @@ ipcMain.on( "MessageEvent",
     }
 );
 
+// Site Navigation events
 ipcMain.on( "userWantsToEnterInventoryPage",
     (event, dataFromEvent) => {
-        // ipcMain.emit()
         startUpWindow.loadFile ( path.join( __dirname + "/Pages/Inventory-page/item-inventory.html" ) )
     }
 )
@@ -43,7 +43,6 @@ ipcMain.on( "UserWantsToEnterRegisterPageEvent",
         startUpWindow.loadFile( path.join( __dirname + "/Pages/Register-page/register-item-page.html") )
         // console.log("user has entered the register page")
     }
-
 );
 
 ipcMain.on( "EnterMainPageEvent",
@@ -61,7 +60,23 @@ ipcMain.on( "userWantsToEnterPurchasePage",
     }
 )
 
-ipcMain.on( "newRegisteredItem", 
+
+// Item Registry Events
+
+/**
+ * Contains the Items, the details associated with the item.
+ * 
+ * To Access an item, the key must be retrieved, the key of an 
+ * item is the name of an item.
+ * 
+ * The data contained within the inventory will be removed after
+ * runtime, data from previous use of the application will not
+ * be saved.
+ * 
+*/
+const itemStorage = new Map();
+
+ipcMain.on("newRegisteredItem", 
     ( event, eventData ) => {
         
         console.log( "successful entry of data: " + eventData);
@@ -71,9 +86,7 @@ ipcMain.on( "newRegisteredItem",
     }
 );
 
-const itemStorage = new Map;
-
-ipcMain.on( "newItemToBeRegistered",
+ipcMain.on("newItemToBeRegistered",
     (event, eventData) => {
         //test if variable arrived safely.
         console.log(eventData);
@@ -85,6 +98,8 @@ ipcMain.on( "newItemToBeRegistered",
     }
 );
 
+
+//Retrieval of Inventory Data Events
 ipcMain.handle( "needItemInventory",
     (event, eventData) => { 
         return itemStorage;
@@ -108,7 +123,8 @@ ipcMain.handle("ifItemNameExistInsideInventory", ( event, eventData ) => {
       return false;
   }
 ) 
-ipcMain.handle("checkForAvailableContent", ( event, eventData ) => { 
+
+ipcMain.handle("checkForAvailableContent", (event, eventData) => { 
     
     const quantity = eventData[0]
     const itemToCheck = itemStorage.get( eventData[1] );
@@ -123,6 +139,20 @@ ipcMain.handle("checkForAvailableContent", ( event, eventData ) => {
 )
 
 
+//Modification of Inventory Data Events
+ipcMain.handle("modifyInventory", ( event, eventData ) => { 
+        
+        const itemName = eventData[0];
+        const amountToRemove = eventData[1];
+
+        const originalQuantity = itemStorage.get(itemName).quantity;
+        originalQuantity -= amountToRemove;
+    
+        return originalQuantity;
+    }
+)
+
+//Window Start Up, function to create start-up window
 function createStartUpWindow() {
     
     startUpWindow = new BrowserWindow( {

@@ -62,7 +62,7 @@ async function purchase() {
 
     const resultFromNameCheck = await takeNameOfItemToPurchase();
 
-    if ( ! resultFromNameCheck.doesNameExist ) { 
+    if (!resultFromNameCheck.doesNameExist) {
       /**
        *  end of purchase process because the item does not exist, so no need to go over the 
        *  other parts of the process. 
@@ -81,7 +81,8 @@ async function purchase() {
     }
 
     const resultFromMoneyTransaction = await takeMoneyForPuchase(
-      resultFromQuantityCheck.pricePerPiece,
+      itemName ,
+      resultFromQuantityCheck.pricePerPiece ,
       resultFromQuantityCheck.quantityToPurchase  
     )
     
@@ -192,7 +193,7 @@ async function purchase() {
    *  if not valid then end the functions
    * 
   */
-  async function takeMoneyForPuchase( pricePerPiece , quantity ) { 
+  async function takeMoneyForPuchase( itemName , pricePerPiece , quantity ) { 
   
     const moneyTaker = document.getElementById("purchaseMoneyReceiver");
     const rawMoneyValue = moneyTaker.value;
@@ -239,9 +240,14 @@ async function purchase() {
      * 
      * return values representing successful transaction  
     */
-
     
-
+    const amountAfterPurchase = await window.modifyInventory( itemName , quantity )
+    
+    const itemDetails = [itemName, quantity, pricePerPiece];
+    const purchaseDetails = [amountAfterPurchase, money ,change]
+    const transactionDetails = new TransactionRecords(itemDetails, purchaseDetails);
+    
+    return new TakeUserMoneyRespond(true, true, transactionDetails);
   }
 }
 
@@ -268,8 +274,9 @@ class TakeUserMoneyRespond {
   /**
    * 
    * The function accepts an array of data type any.
-   * The constructor accepts an array of data type any, but 
-   * the data passed must be spread, not concealed within an object or array.
+   * The constructor accepts an array of data type 
+   * any, but the data passed must be spread, not
+   * concealed within an object or array.
    * 
    *  
    * index 0 = isInputValid ( boolean )
@@ -278,7 +285,7 @@ class TakeUserMoneyRespond {
   */
   constructor( ...Values ) { 
     
-    if ( Values.length < 3 ) { 
+    if ( !Values.length === 3 ) { 
       /**
        * I want to end the constructor after confirming 
        * that only one value is passed, this would mean 
@@ -308,17 +315,54 @@ class TakeUserMoneyRespond {
 }
 
 /**
- * To be filled, I'm not sure what information to store here.
- * will work on this once I have finished the function for taking 
- * the user money. 
+ *Holds all details for a single transaction.
+ *
+ * @constructor
+ * @param { any[] } itemDetails - Contain basic item Information
+ * @param { any[] } purchaseDetails - Contain Transaction Information 
  * 
- * I want to try using classes instead of prototypes in order 
- * to test out classes in javascript. I want to utilise the reusability
- * of classes on scenarios where there are more than one return types
- * in a function for the guard pattern. 
+ * 
+ * itemDetails[0] - name of item,
+ * 
+ * itemDetails[1] - item price per piece
+ * 
+ * itemDetails[2] - item amount before purchase
+ * 
+ *  
+ * purchaseDetails[0] - amount of item after purchase 
+ * 
+ * purchaseDetails[1] - money the user paid for the transaction
+ * 
+ * purchaseDetails[2] - change to the user
+ *  
 */
 class TransactionRecords { 
   
+  constructor( itemDetails, purchaseDetails ) { 
 
+    this.recordItemDetails(itemDetails)
+    this.recordPurchaseDetails(purchaseDetails) 
+  }
 
+  recordItemDetails = async ( itemDetails ) => { 
+    this.itemName = itemDetails[0];
+    this.itemAmountBeforePurchase = itemDetails[1];
+    this.itemPrice = itemDetails[2];
+  }
+
+  recordPurchaseDetails = async (purchaseDetails) => { 
+    this.itemAmountAfterPurchase = purchaseDetails[0];
+    this.moneyForPurchase = purchaseDetails[1];
+    this.changeFromPurchase = purchaseDetails[2];
+  }
+
+  // basic item credentials
+  itemName;
+  itemPrice;
+  itemAmountBeforePurchase;
+  
+  // after purchase credentials
+  itemAmountAfterPurchase;
+  moneyForPurchase;
+  changeFromPurchase;
 }

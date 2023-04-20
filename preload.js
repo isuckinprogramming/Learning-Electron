@@ -94,3 +94,9 @@ contextBridge.exposeInMainWorld( "PurchaseItem" , {
   }
 )
 
+contextBridge.exposeInMainWorld( "modifyInventory" , {
+  subtractItemAmountDueToPurchase: async (itemName, itemAmountToRemove) => { 
+      return await ipcRenderer.invoke("subtractItemAmount", itemName, itemAmountToRemove);
+    }
+  }
+)
