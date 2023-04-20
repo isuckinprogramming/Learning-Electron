@@ -17,22 +17,22 @@ async function fetchInventoryAndDisplayContents() {
     return;
   }
   
-  displayInventoryToPage( testData )
+  displayInventoryToPage( inventoryData )
   
-  console.log(
-    `Data From Inventory : ${testData[0].name} , ${testData[0].price} , ${testData[0].quantity} `
-  )
+  // console.log(
+  //   `Data From Inventory : ${inventoryData[0].name} , ${inventoryData[0].price} , ${inventoryData[0].quantity} `
+  // )
 }
 
 async function displayInventoryToPage( inventory ) {
   
-  if (inventory.length == 0) { 
+  if (inventory.length === 0) { 
     //no items to display so terminate the function
     inventoryContentsDisplayer.innerHTML += "no items to display"
     return;
   }
 
-  for (let itemInside of inventory) { 
+  for (let itemInside of inventory.values()) { 
     displayItemToPage(itemInside);
   }
 }

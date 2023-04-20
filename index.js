@@ -60,6 +60,14 @@ ipcMain.on( "userWantsToEnterPurchasePage",
     }
 )
 
+const transactionDetails = [];
+
+// Transaction Recording
+ipcMain.on("transactionDataFromPurchase", ( event, eventData ) => { 
+    transactionDetails.push(eventData);
+    }
+)
+
 
 // Item Registry Events
 
@@ -126,10 +134,12 @@ ipcMain.handle("ifItemNameExistInsideInventory", ( event, eventData ) => {
 
 ipcMain.handle("checkForAvailableContent", (event, eventData) => { 
     
-    const quantity = eventData[0]
-    const itemToCheck = itemStorage.get( eventData[1] );
+    const quantity = +eventData.amount
+    const itemToCheck = itemStorage.get( eventData.name );
 
-    if( quantity > itemToCheck.quantity ) { 
+    const convertedQuantity = +itemToCheck.quantity;
+   
+    if (quantity > convertedQuantity) { 
       //the purchase is invalid because there is not enough quantity to satisfy the demand 
       return { isItemAvailable: false };
     }
@@ -140,12 +150,13 @@ ipcMain.handle("checkForAvailableContent", (event, eventData) => {
 
 
 //Modification of Inventory Data Events
-ipcMain.handle("modifyInventory", ( event, eventData ) => { 
+ipcMain.handle("subtractItemAmount", ( event, eventData ) => { 
         
-        const itemName = eventData[0];
-        const amountToRemove = eventData[1];
+        const itemName = eventData.name;
+        const amountToRemove = eventData.amount;
 
-        const originalQuantity = itemStorage.get(itemName).quantity;
+        const item = itemStorage.get(itemName);
+        let originalQuantity = item.quantity;    
         originalQuantity -= amountToRemove;
     
         return originalQuantity;
@@ -176,36 +187,6 @@ function createStartUpWindow() {
 
     
     startUpWindow.webContents.send("test", {name: "testItem", price : 123, quantity: 23423})
-
-
-    /**
-     *setInterval(
-        testFunction, 2000
-    );
-    
-    function testFunction() {
-        
-        counterVariable++;
-
-        startUpWindow.webContents.send(
-            "testEvent",
-            { counterVariable: counterVariable, testVariableTwo: "a string" }
-        );
-    }setInterval(
-        testFunction, 2000
-    );
-    
-    function testFunction() {
-        
-        counterVariable++;
-
-        startUpWindow.webContents.send(
-            "testEvent",
-            { counterVariable: counterVariable, testVariableTwo: "a string" }
-        );
-    } 
-     * 
-    */
 }
 
 

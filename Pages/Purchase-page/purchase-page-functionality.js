@@ -56,7 +56,17 @@ async function displayItemsToPurchase() {
 
 async function purchase() {
 
-  purchaseProcess();
+  const purchaseData = await purchaseProcess();
+  // asynchronously send transaction data to main process.
+  window.sendDataToMainProcess.sendTransactionData(
+    purchaseData);
+  
+  // display to purchase page, transaction details
+
+  // const display = document.getElementById("purchaseDetailsDisplayer");
+
+  // display.innerText = "";
+  // display.innerText = ` item amount before purchase: ${purchaseData.TransactionDetails.changeFromPurchase } `
 
   async function purchaseProcess() {
 
@@ -92,7 +102,7 @@ async function purchase() {
      * the purchase and passing it to a new 
     */
     
-
+    return resultFromMoneyTransaction;
    }
 
   async function isInputEmpty( input ) {   
@@ -168,7 +178,7 @@ async function purchase() {
       return { isQuantityValid: false };
     }
 
-    const resultFromAvailabilityCheck = await checkIfQuantityToPurchaseIsAvailable(nameOfItem, quantity);
+    const resultFromAvailabilityCheck = await window.receiveInventoryData.checkIfQuantityToPurchaseIsAvailable(nameOfItem, quantity);
     
     /*
     *if the amount the user entered is greater than what is available then the process cannot continue 
@@ -186,13 +196,6 @@ async function purchase() {
     }
   }
 
-  /**
-   * Take the value for the money
-   * 
-   * check validity, check if the value is not empty 
-   *  if not valid then end the functions
-   * 
-  */
   async function takeMoneyForPuchase( itemName , pricePerPiece , quantity ) { 
   
     const moneyTaker = document.getElementById("purchaseMoneyReceiver");
@@ -210,7 +213,7 @@ async function purchase() {
       //input is not a number, cannot proceed with the input, end the function
       return new TakeUserMoneyRespond();
     }
-    if (money >= 0) { 
+    if (money <= 0) { 
     
       /**
        * the money the user has cannot actually buy anything, 
@@ -241,11 +244,11 @@ async function purchase() {
      * return values representing successful transaction  
     */
     
-    const amountAfterPurchase = await window.modifyInventory( itemName , quantity )
+    const amountAfterPurchase = await window.modifyInventory.subtractItemAmountDueToPurchase({ name: itemName , amount:quantity } )
     
     const itemDetails = [itemName, quantity, pricePerPiece];
     const purchaseDetails = [amountAfterPurchase, money ,change]
-    const transactionDetails = new TransactionRecords(itemDetails, purchaseDetails);
+    const transactionDetails = new TransactionRecords( itemDetails, purchaseDetails );
     
     return new TakeUserMoneyRespond(true, true, transactionDetails);
   }
@@ -261,50 +264,21 @@ async function purchase() {
  * be reassigned, the constructor handles the reassignment, the values for 
  * the fields must correspond according to their respective order.
  * 
- * The constructor accepts an array of data type any, but 
- * the data passed must be spread, not concealed within an object or array.
  * 
- * index 0 = isInputValid ( boolean )
- * index 1 = isTransactionValid ( boolean )
- * index 2 = transactionDetails ( Class )
+ * @constructor
+ * @param { boolean } isInputValid - is raw input qualified for furthere processing 
+ * @param { boolean } isTransactionValid - is there no problems during transaction processing 
+ * @param { TransactionRecords } transactionDetails - holds information of transaction
+ * 
  * 
 */
 class TakeUserMoneyRespond {
 
-  /**
-   * 
-   * The function accepts an array of data type any.
-   * The constructor accepts an array of data type 
-   * any, but the data passed must be spread, not
-   * concealed within an object or array.
-   * 
-   *  
-   * index 0 = isInputValid ( boolean )
-   * index 1 = isTransactionValid ( boolean )
-   * index 2 = transactionDetails ( Class )
-  */
-  constructor( ...Values ) { 
+  constructor( isInputValid, isTransactionValid , transactionDetails ) { 
     
-    if ( !Values.length === 3 ) { 
-      /**
-       * I want to end the constructor after confirming 
-       * that only one value is passed, this would mean 
-       * that the one or more of the fields is not
-       * given a new value after transaction, which means that
-       * the transaction fails.
-       * 
-       * return and the this keyword is used because I want to 
-       * return the object that is currently being constructed, compared
-       * to using return only, which could mean that the return value will 
-       * be a null or undefined data type. 
-       * 
-      */
-      return this;
-    }
-    
-    this.isInputValid = Values[0];
-    this.isTransactionSuccessful = Values[1];
-    this.TransactionDetails = Values[2];
+    this.isInputValid = isInputValid;
+    this.isTransactionSuccessful = isTransactionValid ;
+    this.TransactionDetails = transactionDetails;
   }
 
   isInputValid = false;
@@ -344,25 +318,66 @@ class TransactionRecords {
     this.recordPurchaseDetails(purchaseDetails) 
   }
 
-  recordItemDetails = async ( itemDetails ) => { 
+  recordItemDetails = async (itemDetails) => {
     this.itemName = itemDetails[0];
     this.itemAmountBeforePurchase = itemDetails[1];
     this.itemPrice = itemDetails[2];
   }
 
-  recordPurchaseDetails = async (purchaseDetails) => { 
-    this.itemAmountAfterPurchase = purchaseDetails[0];
+  recordPurchaseDetails = async (purchaseDetails) => {
+    this.itemAmountAfterPurchase = purchaseDetails[0]; 
     this.moneyForPurchase = purchaseDetails[1];
     this.changeFromPurchase = purchaseDetails[2];
   }
-
   // basic item credentials
-  itemName;
-  itemPrice;
-  itemAmountBeforePurchase;
+  
+  _itemName;
+  get itemName() {
+    return this._itemName;
+  }
+  set itemName(value) {
+    this._itemName = value;
+  }
+  
+  _itemPrice;
+  get itemPrice() {
+    return this._itemPrice;
+  }
+  set itemPrice(value) {
+    this._itemPrice = value;
+  }
+
+  _itemAmountBeforePurchase;
+  get itemAmountBeforePurchase() {
+    return this._itemAmountBeforePurchase;
+  }
+  set itemAmountBeforePurchase(value) {
+    this._itemAmountBeforePurchase = value;
+  }
   
   // after purchase credentials
-  itemAmountAfterPurchase;
-  moneyForPurchase;
-  changeFromPurchase;
+  
+  _itemAmountAfterPurchase;
+  get itemAmountAfterPurchase() {
+    return this._itemAmountAfterPurchase;
+  }
+  set itemAmountAfterPurchase(value) {
+    this._itemAmountAfterPurchase = value;
+  }
+  
+  _moneyForPurchase;
+  get moneyForPurchase() {
+    return this._moneyForPurchase;
+  }
+  set moneyForPurchase(value) {
+    this._moneyForPurchase = value;
+  }
+
+  _changeFromPurchase;
+  get changeFromPurchase() {
+    return this._changeFromPurchase;
+  }
+  set changeFromPurchase(value) {
+    this._changeFromPurchase = value;
+  }
 }

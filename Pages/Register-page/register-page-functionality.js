@@ -52,7 +52,7 @@ function EnterPriceOfItem() {
 
     let price = registerPriceOfItemTaker.value;
     registerPriceOfItemTaker.value = "";
-    return price;
+    return +price;
 }
 
 
@@ -66,5 +66,5 @@ function EnterQuantityOfItem() {
 
     let numberOfItem = registerQuantityOfItemTaker.value;
     registerQuantityOfItemTaker.value = "";
-    return numberOfItem;
+    return +numberOfItem;
 }

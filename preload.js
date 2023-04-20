@@ -1,5 +1,13 @@
 const { ipcRenderer,contextBridge, webContents } = require('electron');
 
+contextBridge.exposeInMainWorld("sendDataToMainProcess", {
+    
+    sendTransactionData: async (transacData) => { 
+      ipcRenderer.send( "transactionDataFromPurchase" , transacData ); 
+    }
+  }
+) 
+
 contextBridge.exposeInMainWorld( "itemRegistry", {
 
     sendItemsToInventory: ( itemDetails ) => {
@@ -35,7 +43,8 @@ contextBridge.exposeInMainWorld("receiveInventoryData", {
     },
     checkIfQuantityToPurchaseIsAvailable: async (itemName, quantity) => { 
         
-      return await ipcRenderer.invoke("checkForAvailableContent", itemName, quantity);
+      return await ipcRenderer.invoke("checkForAvailableContent",
+        { name: itemName, amount: quantity } );
     }
 
   }
