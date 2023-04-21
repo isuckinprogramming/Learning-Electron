@@ -53,13 +53,14 @@ async function displayItemsToPurchase() {
 *     tell user that the purchase is successful
 *  
 */
-
 async function purchase() {
 
   const purchaseData = await purchaseProcess();
+
   // asynchronously send transaction data to main process.
-  window.sendDataToMainProcess.sendTransactionData(
-    purchaseData);
+  // the purchaseData cannot be cloned and caused an error.
+  // window.sendDataToMainProcess.sendTransactionData( purchaseData );
+  
   
   // display to purchase page, transaction details
 
@@ -67,6 +68,7 @@ async function purchase() {
 
   // display.innerText = "";
   // display.innerText = ` item amount before purchase: ${purchaseData.TransactionDetails.changeFromPurchase } `
+
 
   async function purchaseProcess() {
 

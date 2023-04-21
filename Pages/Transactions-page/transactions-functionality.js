@@ -1,0 +1,1 @@
+document.getElementById("returnToMainPageButton").onclick = window.SiteNavigation.entryToMainPage;

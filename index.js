@@ -10,53 +10,30 @@ let inventoryOfItem = [];
 //I don't know what to do if the promise fails.
 app.whenReady().then( createStartUpWindow );
 
-ipcMain.on( "MessageEvent",
-    function ( event, dataFromEvent ) { 
+
+ipcMain.on("siteNavigation", ( event, eventData ) => { 
+    
+    let fileLocation; 
+    
+    switch (eventData) { 
+        case "MainPage": fileLocation = path.join( __dirname + "/Pages/start-up-page/start-up-page.html" );
+            break;
+        case "RegisterPage":  fileLocation = path.join( __dirname, "/Pages/Register-page/register-item-page.html" );
+            break;
+        case "InventoryPage":  fileLocation = path.join( __dirname, "/Pages/Inventory-page/item-inventory.html" );
+            break;
+        case "TransactionPage":  fileLocation = path.join( __dirname, "/Pages/Transactions-page/transactions-page.html" );
+            break;
+        case "PurchasePage":  fileLocation = path.join( __dirname, "/Pages/Purchase-page/purchase-page.html" );
+            break; 
         
-        console.log(
-            "Data from the renderer process" + dataFromEvent
-        )
-
-        event.reply(
-            "MainThreadReply",
-            "hello from main process."
-        );
-
+        default:
+            // end the function if the eventData does not match any case because the chances are that 
+            // the data is incorrect. And there is nowhere to redirect if that is the case.
+            return;
     }
-);
-
-// Site Navigation events
-ipcMain.on( "userWantsToEnterInventoryPage",
-    (event, dataFromEvent) => {
-        startUpWindow.loadFile ( path.join( __dirname + "/Pages/Inventory-page/item-inventory.html" ) )
-    }
-)
-
-ipcMain.on( "UserWantsToEnterRegisterPageEvent",
-    function (event, dataFromEvent) { 
-        
-        /**
-         * dataFromEvent is not really necessary, I just want to make sure that this  
-         * function changes the loadfile of the startUpWindow to the intended page. 
-         * 
-        */
-        startUpWindow.loadFile( path.join( __dirname + "/Pages/Register-page/register-item-page.html") )
-        // console.log("user has entered the register page")
-    }
-);
-
-ipcMain.on( "EnterMainPageEvent",
-    function (event, dataFromEvent) {
-        
-        console.log(dataFromEvent);
-        startUpWindow.loadFile( path.join( __dirname + "/Pages/start-up-page/start-up-page.html" ) );
-    }
-);
-
-ipcMain.on( "userWantsToEnterPurchasePage",
-    ( event, eventData ) => { 
-
-        startUpWindow.loadFile( path.join( __dirname, "/Pages/Purchase-page/purchase-page.html" ) )
+    
+    startUpWindow.loadFile( fileLocation );
     }
 )
 
@@ -86,8 +63,6 @@ const itemStorage = new Map();
 
 ipcMain.on("newRegisteredItem", 
     ( event, eventData ) => {
-        
-        console.log( "successful entry of data: " + eventData);
         inventoryOfItem.push(eventData);
 
         // event.reply( "itemInventoryFromRecords", inventoryOfItem );
@@ -96,13 +71,8 @@ ipcMain.on("newRegisteredItem",
 
 ipcMain.on("newItemToBeRegistered",
     (event, eventData) => {
-        //test if variable arrived safely.
-        console.log(eventData);
-        
         // itemStorage.push(eventData);
         itemStorage.set(eventData.name, eventData);
-
-        console.log(itemStorage);
     }
 );
 
@@ -117,17 +87,19 @@ ipcMain.handle( "needItemInventory",
 ipcMain.handle("ifItemNameExistInsideInventory", ( event, eventData ) => { 
     
     if (itemStorage.has(eventData)) {
-
-      console.log("item found")
+    //   console.log("item found")
       return true;
     }
 
-      // for (let loopCounter = 0; loopCounter < itemStorage.length; loopCounter++ ) { 
+    /**
+     *Would have used this code if the item storage is an array and not a map.   
+     * for (let loopCounter = 0; loopCounter < itemStorage.length; loopCounter++ ) { 
           
-      //     if ( itemStorage[ loopCounter ].name === eventData ) 
-      //     console.log( `item found: ${ eventData } exist inside inventory, index ` )
-      // } 
-
+          if ( itemStorage[ loopCounter ].name === eventData ) 
+         console.log( `item found: ${ eventData } exist inside inventory, index ` )
+      } 
+     * 
+    */ 
       return false;
   }
 ) 
@@ -156,10 +128,9 @@ ipcMain.handle("subtractItemAmount", ( event, eventData ) => {
         const amountToRemove = eventData.amount;
 
         const item = itemStorage.get(itemName);
-        let originalQuantity = item.quantity;    
-        originalQuantity -= amountToRemove;
+        item.quantity -= amountToRemove;
     
-        return originalQuantity;
+        return item.quantity;
     }
 )
 
@@ -184,9 +155,8 @@ function createStartUpWindow() {
     startUpWindow.maximize();
 
     startUpWindow.webContents.openDevTools();
-
     
-    startUpWindow.webContents.send("test", {name: "testItem", price : 123, quantity: 23423})
+    startUpWindow.webContents.send( "test", { name: "testItem", price : 123, quantity: 23423 } )
 }
 
 

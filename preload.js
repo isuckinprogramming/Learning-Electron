@@ -49,46 +49,23 @@ contextBridge.exposeInMainWorld("receiveInventoryData", {
 
   }
 )
+
 contextBridge.exposeInMainWorld( "SiteNavigation", {
 
-    /**
-     * Changes the current page to the Main Page.
-    */
     entryToMainPage: () => { 
-      ipcRenderer.send("EnterMainPageEvent");
-    },
-    
-    /**
-     * Changes the current page to the Item Registry Page.
-    */
+      ipcRenderer.send( "siteNavigation", "MainPage" );
+    },    
     entryToRegistry: () => { 
-      console.log("user wants to enter the register page.")
-      ipcRenderer.send( "UserWantsToEnterRegisterPageEvent" );
+      ipcRenderer.send( "siteNavigation", "RegisterPage");
     },
-
-    /**
-    * Changes the current page to the Item Inventory Page.
-    */
     entryToInventory: () => {
-
-      ipcRenderer.send("userWantsToEnterInventoryPage", "I don't know what to send over, just need the request.")
+      ipcRenderer.send( "siteNavigation", "InventoryPage" )
     },
-
-    /**
-     * Changes the current page to the Item Purchase Page
-     * 
-    */
     entryToPurchase:  () => {
-        
-      ipcRenderer.send("userWantsToEnterPurchasePage", "I do not have any idea about the use cases of IPC."); 
+      ipcRenderer.send("siteNavigation", "PurchasePage"); 
     },
-
-    /**
-     * Changes the current page to the Transactions History Page.
-    */
     entryToTransactionsHistory: () => { 
-
-      ipcRenderer.send("userWantsToEnterTransactionsPage", "just to fulfil parameter requirements.")
+      ipcRenderer.send("siteNavigation", "TransactionPage")
     },
   }
 ) 
