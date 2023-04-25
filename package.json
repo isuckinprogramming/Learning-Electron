@@ -1,0 +1,15 @@
+{
+  "name": "learning-electron",
+  "version": "1.0.0",
+  "description": "Test app to learn the basics of electron",
+  "main": "index.js",
+  "scripts": {
+    "test": "electron .",
+    "devRun" : "nodemon --exec electron ."
+  },
+  "author": "Daniel Lim",
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "^24.0.0"
+  }
+}

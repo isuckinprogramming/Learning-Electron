@@ -1,0 +1,6 @@
+{
+    "ignore": [
+        ".vscode/"
+    ],
+    "ext" :"js, json, html"
+}

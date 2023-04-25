@@ -87,7 +87,6 @@ ipcMain.handle( "needItemInventory",
 ipcMain.handle("ifItemNameExistInsideInventory", ( event, eventData ) => { 
     
     if (itemStorage.has(eventData)) {
-    //   console.log("item found")
       return true;
     }
 

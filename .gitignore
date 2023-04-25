@@ -1,5 +1,5 @@
-.vscode
+# .vscode
 /node_modules
-nodemon.json
-package-lock.json
-package.json
+# nodemon.json
+# package-lock.json
+# package.json
